@@ -1,0 +1,90 @@
+Docker 
+
+# To get docker image list
+sudo docker images
+
+# To get runing docker container list
+sudo docker ps
+
+# To get all docker container list
+sudo docker ps -a
+
+# To delete docker container
+sudo docker rm <container ID>
+
+# To delete docker image ( But if image is used by any container then will get error )
+sudo docker rmi <image ID>
+
+# To build docker image from the Dockerfile in the current directory and tag the image
+sudo docker build -t myapp:<tag> .
+#or
+sudo docker build -t myapp .
+
+# To pull the image from the registry 
+sudo docker pull <imageName>
+
+
+# To run image 
+sudo docker run 
+		--rm 	{remove container automatically after it exits}
+		-it  	{connect the container to terminal}
+	--name web   	{name the container}
+	-p 5000:80   	{expose port 5000 externally and map to port 80}
+	-v ~/dev:/code	{create a host mapped volume inside the container}
+	<imageName>	{the image from which the container is in stantiated}
+	/bin/sh		{command to run inside the container}
+
+
+# To stop running container through sending SIGTERM
+sudo docker stop <running containerName>
+
+# To stop running container through sending SIGKILL
+sudo docker kill <runing containerName>
+
+# To create an overlay network and specify a subnet
+sudo docker network create --subnet 10.1.0.0/24 --gateway 10.1.0.1 -d overlay mynet
+
+# To list the networks
+sudo docker network ls
+
+# To delete all runing and stopped containers
+docker rm -f $(docker ps -aq)
+
+# To create new bash process inside the container and connect it to terminal
+sudo docker exec -it <containerName> bash
+
+# To get the docker logs 
+sudo docker logs --tail 100 <containerName>
+
+
+######## Need to Try Orchestrate ############
+
+# To init swarm mode and listen on specific adv
+sudo docker swarm init --advertise-addr 10.10.2
+
+# To Join an existing swarm as a manager node
+sudo docker swarm join --token <manager-token> 10.1.0.2:2377
+
+# To Join an existing swarm as a worker node
+sudo docker swarm join --token <worker-token> 10.1.0.2:2377
+
+# To get node list in a swarm
+sudo docker node ls
+
+# To Create a service from an image exposed on a specific port and deploy 3 instances
+sudo docker service create --replicas 3 -p 80:80 --name <serviceName> <imageName>
+
+# List service runing in swarm
+sudo docker service ls
+
+# To scale a service 
+sudo docker service scale <serviceNmae>=<number of service>
+
+# To list the task of a service
+sudo docker service ps <serviceName>
+
+# To remove service from the swarm 
+sudo docker service rm <serviceID>
+
+
+
